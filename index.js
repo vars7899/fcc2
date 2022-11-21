@@ -25,10 +25,22 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.get("/api/whoami", (req, res) => {
+  function getUserAgent() {
+    let userAgent = req.get("user-agent");
+
+    if (!userAgent) return "unknown";
+    let reg = /\(([^)]+)\)/;
+    let match = userAgent.match(reg)[1];
+
+    if (!match) return "unknown";
+
+    return match;
+  }
+
   res.status(200).json({
     ipaddress: req.ip,
     language: req.get("accept-language"),
-    software: req.get("user-agent"),
+    software: getUserAgent(),
   });
 });
 
